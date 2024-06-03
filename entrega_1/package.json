@@ -1,0 +1,16 @@
+{
+    "name": "entrega_1",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "scripts": {
+        "start": "node --watch --no-warnings ./server.js",
+        "stop-windows": "taskkill /F /IM node.exe"
+    },
+    "keywords": [],
+    "author": "Joaquin Matias Olivieri",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.19.2"
+    }
+}
