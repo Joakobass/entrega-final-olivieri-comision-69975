@@ -4,13 +4,16 @@
     "description": "",
     "type": "module",
     "scripts": {
-        "start": "node --watch --no-warnings ./server.js",
-        "stop-windows": "taskkill /F /IM node.exe"
+        "start": "node --watch --no-warnings ./src/server.js",
+        "stop-windows": "taskkill /F /IM node.exe",
+        "stop-linux": "killall -9 node",
+        "lint": "eslint ./src --fix"
     },
     "keywords": [],
     "author": "Joaquin Matias Olivieri",
     "license": "ISC",
     "dependencies": {
-        "express": "^4.19.2"
+        "express": "^4.19.2",
+        "express-handlebars": "^7.1.2"
     }
 }

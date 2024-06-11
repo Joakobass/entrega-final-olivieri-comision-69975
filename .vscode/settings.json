@@ -1,0 +1,18 @@
+{
+    "window.zoomLevel": 1,
+    "explorer.confirmDelete": false,
+    "explorer.confirmPasteNative": false,
+    "editor.minimap.enabled": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "eslint.format.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "files.autoSave": "onFocusChange",
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.activeIconPack": "react",
+    "material-icon-theme.folders.theme": "classic",
+    "material-icon-theme.folders.color": "#7E650E"
+}

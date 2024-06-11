@@ -27,7 +27,8 @@ router.get('/', async (req, res) => {
 	}
 
 	const productosLimitados = productos.slice(0, limit);
-	res.send(productosLimitados);
+    res.render("index", {})
+    //res.send(productosLimitados);
 });
 
 router.get('/:pid', async (req, res) => {
