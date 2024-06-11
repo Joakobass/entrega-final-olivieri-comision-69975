@@ -1,109 +1,99 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+// import path from "path";
+import FileSystem from "../utils/fileSystem.js";
 
 class ProductManager {
-	#rutaArchivoProductsJSON;
+    #filename;
+    #FileSystem;
 
-	constructor() {
-		this.#rutaArchivoProductsJSON = path.join('src/files', 'products.json');
-	}
+    constructor() {
+        this.#filename = "products.json";
+        this.#FileSystem = new FileSystem(this.#filename);
+    }
 
-	#obtenerProductos = async () => {
-		if (!fs.existsSync(this.#rutaArchivoProductsJSON)) {
-			await fs.promises.writeFile(this.#rutaArchivoProductsJSON, '[]');
-		}
+    #getProducts = async () => {
+        if (!fs.existsSync(this.#filename)) {
+            await this.#FileSystem.write([]);
+        }
 
-		const productosJSON = await fs.promises.readFile(
-			this.#rutaArchivoProductsJSON,
-			'utf8'
-		);
+        const productsJSON = this.#FileSystem.read();
 
-		return JSON.parse(productosJSON);
-	};
+        return productsJSON;
+    };
 
-	#crearProducto = async (productoNuevo) => {
-		const productos = await this.#obtenerProductos();
+    #createProduct = async (newProduct) => {
+        const products = await this.#getProducts();
 
-		productos.push(productoNuevo);
+        products.push(newProduct);
 
-		const productosActualizadosJSON = JSON.stringify(productos, null, '\t');
-		await fs.promises.writeFile(
-			this.#rutaArchivoProductsJSON,
-			productosActualizadosJSON
-		);
-	};
+        this.#FileSystem.write(products);
 
-	#generarId = async () => {
-		const productos = await this.consultarProductos();
-		let idMayor = 0;
+    };
 
-		productos.forEach((producto) => {
-			if (producto.id > idMayor) {
-				idMayor = producto.id;
-			}
-		});
+    #generateID = async () => {
+        const products = await this.productsConsult();
+        let idMajor = 0;
 
-		return idMayor + 1;
-	};
+        products.forEach((product) => {
+            if (product.id > idMajor) {
+                idMajor = product.id;
+            }
+        });
 
-	agregarProducto = async (
-		title,
-		description,
-		code,
-		price,
-		stock,
-		category,
-		thumbnail
-	) => {
-		const product = {
-			id: await this.#generarId(),
-			title,
-			description,
-			code,
-			price,
-			status: true,
-			stock,
-			category,
-			thumbnail: [thumbnail].flat()
-		};
-		await this.#crearProducto(product);
-	};
+        return idMajor + 1;
+    };
 
-	actualizarProducto = async (productoActualizado) => {
-		const productos = await this.#obtenerProductos();
-		const indice = productos.findIndex(
-			(producto) => producto.id === productoActualizado.id
-		);
+    addProduct = async (
+        title,
+        description,
+        code,
+        price,
+        stock,
+        category,
+        thumbnail,
+    ) => {
+        const product = {
+            id: await this.#generateID(),
+            title,
+            description,
+            code,
+            price,
+            status: true,
+            stock,
+            category,
+            thumbnail: [thumbnail].flat(),
+        };
+        await this.#createProduct(product);
+    };
 
-		productos[indice] = productoActualizado;
+    updateProduct = async (updatedProduct) => {
+        const products = await this.#getProducts();
+        const index = products.findIndex(
+            (product) => product.id === updatedProduct.id,
+        );
 
-		const productosActualizadosJSON = JSON.stringify(productos, null, '\t');
-		await fs.promises.writeFile(
-			this.#rutaArchivoProductsJSON,
-			productosActualizadosJSON
-		);
-	};
+        products[index] = updatedProduct;
 
-	borrarProducto = async (productoABorrar) => {
-		const productos = await this.#obtenerProductos();
-		const indice = productos.findIndex(
-			(producto) => producto.id === productoABorrar.id
-		);
+        this.#FileSystem().write(products);
+    };
 
-		productos.splice(indice, 1);
+    deleteProduct = async (deletedProduct) => {
+        const products = await this.#getProducts();
+        const index = products.findIndex(
+            (product) => product.id === deletedProduct.id,
+        );
 
-		const productosActualizadosJSON = JSON.stringify(productos, null, '\t');
-		await fs.promises.writeFile(
-			this.#rutaArchivoProductsJSON,
-			productosActualizadosJSON
-		);
-	};
+        products.splice(index, 1);
 
-	consultarProductos = async () => {
-		const productos = await this.#obtenerProductos();
+        this.#FileSystem.write(products);
 
-		return productos;
-	};
+    };
+
+    productsConsult = async () => {
+        const products = await this.#getProducts();
+
+        return products;
+    };
 }
 
 export default ProductManager;

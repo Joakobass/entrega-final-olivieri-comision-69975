@@ -1,29 +1,37 @@
-import express from 'express';
-import handlebars from "express-handlebars";
-import productsRouter from './routes/products.router.js';
-import cartsRouter from './routes/carts.router.js';
-import paths from './utils/paths.js';
+import express from "express";
+import handlebars from "./config/handlebars.config.js";
+import productsRouter from "./routes/products.router.js";
+import cartsRouter from "./routes/carts.router.js";
+import paths from "./utils/paths.js";
 
 const server = express();
 const PORT = 8080;
-const HOST = 'localhost';
+const HOST = "localhost";
 
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.engine("handlebars", handlebars.engine());
-server.set("views", paths.views);
-server.set("view engine", "handlebars");
+// Configuración Handlebars
+handlebars.config(server);
 
-server.use("/api/public", express.static(paths.public))
+// Enrutadores
+server.use("/api/products", productsRouter);
+server.use("/api/carts", cartsRouter);
 
-server.use('/api/products', productsRouter);
-server.use('/api/carts', cartsRouter);
+// Ruta estática
+server.use("/api/public", express.static(paths.public));
 
-server.use('*', (req, res) => {
-	return res.status(404).send({ error: 'Recurso no encontardo' });
+// Rutas inexistentes
+server.use("*", (req, res) => {
+    return res.status(404).send("<h1>Error 404</h1><h3>La URL indicada no existe en este servidor</h3>");
 });
 
+// Errores internos
+server.use((error, req, res) => {
+    return res.status(500).send("<h1>Error 500</h1><h3>Se ha generado un error en el servidor</h3>");
+});
+
+// Oyente de peticiones
 server.listen(PORT, () => {
-	console.log(`Servidor en http://${HOST}:${PORT}`);
+    console.log(`Servidor en http://${HOST}:${PORT}`) ;
 });

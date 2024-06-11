@@ -1,83 +1,83 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 class CartManager {
-	#rutaArchivoCartsJSON;
+    #rutaArchivoCartsJSON;
 
-	constructor() {
-		this.#rutaArchivoCartsJSON = path.join('src/files', 'carts.json');
-	}
+    constructor() {
+        this.#rutaArchivoCartsJSON = path.join("src/files", "carts.json");
+    }
 
     #obtenerCarritos = async () => {
-		if (!fs.existsSync(this.#rutaArchivoCartsJSON)) {
-			await fs.promises.writeFile(this.#rutaArchivoCartsJSON, '[]');
-		}
+        if (!fs.existsSync(this.#rutaArchivoCartsJSON)) {
+            await fs.promises.writeFile(this.#rutaArchivoCartsJSON, "[]");
+        }
 
-		const carritosJSON = await fs.promises.readFile(
-			this.#rutaArchivoCartsJSON,
-			'utf8'
-		);
+        const carritosJSON = await fs.promises.readFile(
+            this.#rutaArchivoCartsJSON,
+            "utf8",
+        );
 
-		return JSON.parse(carritosJSON);
-	};
+        return JSON.parse(carritosJSON);
+    };
 
     #crearCarrito = async (carritoNuevo) => {
-		const carritos = await this.#obtenerCarritos();
+        const carritos = await this.#obtenerCarritos();
 
-		carritos.push(carritoNuevo);
+        carritos.push(carritoNuevo);
 
-		const carritosActualizadosJSON = JSON.stringify(carritos, null, '\t');
-		await fs.promises.writeFile(
-			this.#rutaArchivoCartsJSON,
-			carritosActualizadosJSON
-		);
-	};
+        const carritosActualizadosJSON = JSON.stringify(carritos, null, "\t");
+        await fs.promises.writeFile(
+            this.#rutaArchivoCartsJSON,
+            carritosActualizadosJSON,
+        );
+    };
 
-	#generarId = async () => {
-		const carritos = await this.consultarCarritos();
-		let idMayor = 0;
+    #generarId = async () => {
+        const carritos = await this.consultarCarritos();
+        let idMayor = 0;
 
-		carritos.forEach((carrito) => {
-			if (carrito.id > idMayor) {
-				idMayor = carrito.id;
-			}
-		});
+        carritos.forEach((carrito) => {
+            if (carrito.id > idMayor) {
+                idMayor = carrito.id;
+            }
+        });
 
-		return idMayor + 1;
-	};
+        return idMayor + 1;
+    };
 
-	agregarCarrito = async (productos) => {
-		
-        const productosAgregados = productos.map(producto => [{id: producto.id, quantity: 1}])
+    agregarCarrito = async (productos) => {
+
+        const productosAgregados = productos.map((producto) => [{ id: producto.id, quantity: 1 }]);
 
         const carrito = {
-			id: await this.#generarId(),
-			products: productosAgregados.flat()
-		};
+            id: await this.#generarId(),
+            products: productosAgregados.flat(),
+        };
 
-        await this.#crearCarrito(carrito)
-	};
+        await this.#crearCarrito(carrito);
+    };
 
     actualizarCarrito = async (carritoActualizado) => {
-		const carritos = await this.#obtenerCarritos();
-		const indice = carritos.findIndex(
-			(carrito) => carrito.id === carritoActualizado.id
-		);
+        const carritos = await this.#obtenerCarritos();
+        const indice = carritos.findIndex(
+            (carrito) => carrito.id === carritoActualizado.id,
+        );
 
-		carritos[indice] = carritoActualizado;
+        carritos[indice] = carritoActualizado;
 
-		const carritosActualizadosJSON = JSON.stringify(carritos, null, '\t');
-		await fs.promises.writeFile(
-			this.#rutaArchivoCartsJSON,
-			carritosActualizadosJSON
-		);
-	};
+        const carritosActualizadosJSON = JSON.stringify(carritos, null, "\t");
+        await fs.promises.writeFile(
+            this.#rutaArchivoCartsJSON,
+            carritosActualizadosJSON,
+        );
+    };
 
-	consultarCarritos = async () => {
-		const carritos = await this.#obtenerCarritos();
+    consultarCarritos = async () => {
+        const carritos = await this.#obtenerCarritos();
 
-		return carritos;
-	};
+        return carritos;
+    };
 }
 
-export default CartManager
+export default CartManager;
