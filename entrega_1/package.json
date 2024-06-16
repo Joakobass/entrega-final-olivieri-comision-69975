@@ -10,10 +10,9 @@
     "stop-windows": "taskkill /F /IM node.exe",
     "stop-linux": "killall -9 node",
     "lint": "eslint ./src --fix"
-    
   },
   "keywords": [],
-  "author": "Sergio Regalado Alessi",
+  "author": "Joaquin Matias Olivieri",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2",

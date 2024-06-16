@@ -1,50 +1,50 @@
 import { Router } from "express";
-import ProductManager from "../utils/productManager.js";
+import ProductManager from "../controllers/productManager.js";
 
-const articulos = new ProductManager();
+const productMgr = new ProductManager();
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     const { limit } = req.query;
-    const productos = await articulos.consultarProductos();
+    const products = await productMgr.productsConsult();
 
-    if (!productos || productos.length === 0) {
+    if (!products || products.length === 0) {
         return res.status(400).send({
             status: "error",
             message: "no hay productos en la lista",
         });
     }
     if (!limit) {
-        return res.status(200).send(productos);
+        return res.status(200).send(products);
     }
 
-    if (isNaN(Number(limit)) || Number(limit) <= 0) {
+    if (isNaN(Number(limit)) || Number(limit) < 0) {
         return res.status(400).send({
             status: "error",
             message: "el limite debe ser un numero positivo",
         });
     }
 
-    const productosLimitados = productos.slice(0, limit);
+    const limitedProducts = products.slice(0, limit);
 
-    res.send(productosLimitados);
+    res.send(limitedProducts);
 });
 
 router.get("/:pid", async (req, res) => {
     const { pid } = req.params;
-    const productos = await articulos.consultarProductos();
-    const productoBuscado = productos.find(
-        (producto) => producto.id === Number(pid),
+    const products = await productMgr.productsConsult();
+    const searchedProduct = products.find(
+        (product) => product.id === Number(pid),
     );
 
-    if (!productoBuscado) {
+    if (!searchedProduct) {
         return res
             .status(400)
             .send({ status: "no existe el producto buscado" });
     }
 
-    res.status(200).send(productoBuscado);
+    res.status(200).send(searchedProduct);
 });
 
 router.post("/", async (req, res) => {
@@ -52,46 +52,23 @@ router.post("/", async (req, res) => {
     const { title, description, code, price, stock, category, thumbnail } =
 		req.body;
 
-    if (
-        !title ||
-		!description ||
-		!code ||
-		!price ||
-		!stock ||
-		!category ||
-		!thumbnail
-    ) {
-        return res
-            .status(400)
-            .send({ status: "error", message: "Datos incompletos" });
-    }
+    productMgr.addProduct(title, description, code, price, stock, category, thumbnail);
 
-    articulos.agregarProducto(
-        title,
-        description,
-        code,
-        price,
-        stock,
-        category,
-        thumbnail,
-    );
+    res.status(201).redirect("http://localhost:8080/realtimeproducts");
 
-    return res
-        .status(201)
-        .send({ status: "success", message: "Se ha agregado un producto" });
 });
 
 router.put("/:pid", async (req, res) => {
     const { pid } = req.params;
     const { title, description, code, price, stock, category, thumbnail } =
 		req.body;
-    const productos = await articulos.consultarProductos();
+    const products = await productMgr.productsConsult();
 
-    const productoBuscado = productos.find(
-        (producto) => producto.id === Number(pid),
+    const searchedProduct = products.find(
+        (product) => product.id === Number(pid),
     );
 
-    if (!productoBuscado) {
+    if (!searchedProduct) {
         return res
             .status(400)
             .send({ status: "error", message: "Producto no encontrado" });
@@ -110,39 +87,38 @@ router.put("/:pid", async (req, res) => {
             .status(400)
             .send({ status: "error", message: "Datos incompletos" });
     }
-    const statusProducto = productoBuscado.status;
 
-    const productoActualizado = {
+    const updatedProduct = {
         id: Number(pid),
         title,
         description,
         code,
         price,
-        status: statusProducto,
+        status: searchedProduct.status,
         stock,
         category,
         thumbnail,
     };
 
-    articulos.actualizarProducto(productoActualizado);
+    productMgr.updateProduct(updatedProduct);
 
     res.status(200).send({ status: "success", message: "producto modificado" });
 });
 
 router.delete("/:pid", async (req, res) => {
     const { pid } = req.params;
-    const productos = await articulos.consultarProductos();
-    const productoABorrar = productos.find(
-        (producto) => producto.id === Number(pid),
+    const products = await productMgr.productsConsult();
+    const productToDelete = products.find(
+        (product) => product.id === Number(pid),
     );
 
-    if (!productoABorrar) {
+    if (!productToDelete) {
         return res
             .status(400)
             .send({ status: "error", message: "Producto no encontrado" });
     }
 
-    articulos.borrarProducto(productoABorrar);
+    productMgr.deleteProduct(productToDelete);
 
     res.status(200).send({ status: "success", message: "producto eliminado" });
 });

@@ -3,6 +3,8 @@ import handlebars from "./config/handlebars.config.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import paths from "./utils/paths.js";
+import viewsRouter from "./routes/views.router.js";
+import serverSocket from "./config/socket.config.js";
 
 const server = express();
 const PORT = 8080;
@@ -11,15 +13,16 @@ const HOST = "localhost";
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-// Configuración Handlebars
-handlebars.config(server);
+// Ruta estática
+server.use(express.static(paths.public));
 
 // Enrutadores
+server.use("/", viewsRouter);
 server.use("/api/products", productsRouter);
 server.use("/api/carts", cartsRouter);
 
-// Ruta estática
-server.use("/api/public", express.static(paths.public));
+// Configuración Handlebars
+handlebars.config(server);
 
 // Rutas inexistentes
 server.use("*", (req, res) => {
@@ -32,6 +35,9 @@ server.use((error, req, res) => {
 });
 
 // Oyente de peticiones
-server.listen(PORT, () => {
+const serverHTTP = server.listen(PORT, () => {
     console.log(`Servidor en http://${HOST}:${PORT}`) ;
 });
+
+// Configuracion websocket
+serverSocket.config(serverHTTP);

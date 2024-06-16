@@ -1,6 +1,6 @@
-import fs from "fs";
-// import path from "path";
+
 import FileSystem from "../utils/fileSystem.js";
+import serverIO from "../config/socket.config.js";
 
 class ProductManager {
     #filename;
@@ -12,11 +12,8 @@ class ProductManager {
     }
 
     #getProducts = async () => {
-        if (!fs.existsSync(this.#filename)) {
-            await this.#FileSystem.write([]);
-        }
 
-        const productsJSON = this.#FileSystem.read();
+        const productsJSON = await this.#FileSystem.read();
 
         return productsJSON;
     };
@@ -27,6 +24,8 @@ class ProductManager {
         products.push(newProduct);
 
         this.#FileSystem.write(products);
+
+        serverIO.updateProductsList(products);
 
     };
 
@@ -43,15 +42,12 @@ class ProductManager {
         return idMajor + 1;
     };
 
-    addProduct = async (
-        title,
-        description,
-        code,
-        price,
-        stock,
-        category,
-        thumbnail,
-    ) => {
+    addProduct = async (title, description, code, price, stock, category, thumbnail) => {
+
+        if (!title ||!description ||!code ||!price ||!stock ||!category ||!thumbnail) {
+            throw new Error("Datos incompletos");
+        }
+
         const product = {
             id: await this.#generateID(),
             title,
@@ -61,9 +57,11 @@ class ProductManager {
             status: true,
             stock,
             category,
-            thumbnail: [thumbnail].flat(),
+            thumbnail: thumbnail,
         };
+
         await this.#createProduct(product);
+
     };
 
     updateProduct = async (updatedProduct) => {
@@ -74,7 +72,7 @@ class ProductManager {
 
         products[index] = updatedProduct;
 
-        this.#FileSystem().write(products);
+        this.#FileSystem.write(products);
     };
 
     deleteProduct = async (deletedProduct) => {
@@ -86,6 +84,7 @@ class ProductManager {
         products.splice(index, 1);
 
         this.#FileSystem.write(products);
+        serverIO.updateProductsList(products);
 
     };
 

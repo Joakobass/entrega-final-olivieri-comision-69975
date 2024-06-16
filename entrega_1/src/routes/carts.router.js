@@ -1,34 +1,34 @@
 import { Router } from "express";
-import CartManager from "../utils/cartManager.js";
-import ProductManager from "../utils/productManager.js";
+import CartManager from "../controllers/cartManager.js";
+import ProductManager from "../controllers/productManager.js";
 
-const carros = new CartManager();
-const productos = new ProductManager();
+const cartsMgr = new CartManager();
+const products = new ProductManager();
 const router = Router();
 
 router.get("/:cid", async (req, res) => {
     const { cid } = req.params;
-    const carritos = await carros.consultarCarritos();
-    const carritoBuscado = carritos.find(
-        (carrito) => carrito.id === Number(cid),
+    const carts = await cartsMgr.cartsConsult();
+    const searchedCart = carts.find(
+        (cart) => cart.id === Number(cid),
     );
 
-    if (!carritoBuscado) {
+    if (!searchedCart) {
         return res.status(400).send({ status: "no existe el carrito buscado" });
     }
 
-    res.status(200).send(carritoBuscado.products);
+    res.status(200).send(searchedCart.products);
 });
 
 router.post("/", async (req, res) => {
-    const productosAAgregar = await productos.consultarProductos();
-    if (!productosAAgregar || productosAAgregar.length === 0) {
+    const productsToAdd = await products.productsConsult();
+    if (!productsToAdd || productsToAdd.length === 0) {
         return res.status(400).send({
             status: "error",
             message: "No hay productos que agregar al carrito",
         });
     }
-    carros.agregarCarrito(productosAAgregar);
+    cartsMgr.addCart(productsToAdd);
 
     return res
         .status(201)
@@ -37,28 +37,28 @@ router.post("/", async (req, res) => {
 
 router.post("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params;
-    const carritos = await carros.consultarCarritos();
-    const carritoBuscado = carritos.find(
-        (carrito) => carrito.id === Number(cid),
+    const carts = await cartsMgr.cartsConsult();
+    const searchedCart = carts.find(
+        (cart) => cart.id === Number(cid),
     );
 
-    if (!carritoBuscado) {
+    if (!searchedCart) {
         return res.status(400).send({ status: "no existe el carrito buscado" });
     }
 
-    const productoBuscado = carritoBuscado.products.find(
-        (producto) => producto.id === Number(pid),
+    const searchedProduct = searchedCart.products.find(
+        (product) => product.id === Number(pid),
     );
-    if (!productoBuscado) {
-        carritoBuscado.products.push({ id: Number(pid), quantity: 1 });
-        carros.actualizarCarrito(carritoBuscado);
+    if (!searchedProduct) {
+        searchedCart.products.push({ id: Number(pid), quantity: 1 });
+        cartsMgr.updateCart(searchedCart);
         return res.status(200).send({
             status: "success",
             message: "se ha agregado un producto al carrito buscado",
         });
     } else {
-        productoBuscado.quantity++;
-        carros.actualizarCarrito(carritoBuscado);
+        searchedProduct.quantity++;
+        cartsMgr.updateCart(searchedCart);
         return res
             .status(201)
             .send({
