@@ -55,7 +55,6 @@ router.post("/", async (req, res) => {
     productMgr.addProduct(title, description, code, price, stock, category, thumbnail);
 
     res.status(201).redirect("http://localhost:8080/realtimeproducts");
-
 });
 
 router.put("/:pid", async (req, res) => {

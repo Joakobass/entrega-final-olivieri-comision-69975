@@ -1,7 +1,7 @@
 <main>
         <section class="container">
             <h2>Formulario de Ingreso de Vehiculos</h2>
-            <form method="POST" action="/api/products">
+            <form id="form" method="POST" action="/api/products">
                 <div class="form-group">
                     <label for="title">Marca del Vehiculo</label>
                     <input type="text" id="title" name="title" required>
@@ -38,7 +38,7 @@
                     <input type="text" id="thumbnail" name="thumbnail" required></textarea>
                 </div>
                 <div class="form-group">
-                    <button type="submit" style="width: 100%">Ingresar Producto</button>
+                    <button id="add-product" type="submit" style="width: 100%">Ingresar Producto</button>
                 </div>
             </form>
         </section>
@@ -47,5 +47,7 @@
             <div class="product-container"></div>
         </section>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/home.js"></script>

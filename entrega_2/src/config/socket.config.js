@@ -38,6 +38,7 @@ const updateProductsList = (products) => {
     if(serverIO){
 
         serverIO.emit("products-list", { products });
+
     }
 };
 

@@ -1,3 +1,4 @@
+
 const socket = io();
 
 const createProductCard = (product) => {
@@ -24,10 +25,12 @@ socket.on("products-list", (data) => {
     const productsList = data.products ?? [];
     productContainer.innerHTML = "";
 
+    // Carga de productos
     productsList.forEach( (product) => {
         productContainer.innerHTML += createProductCard(product);
     });
 
+    // Se agrega a cada boton Eliminar el evento de click para borrar productos
     const deleteBtns = document.querySelectorAll(".delete-btn");
 
     deleteBtns.forEach((button) => {
