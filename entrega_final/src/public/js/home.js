@@ -1,4 +1,3 @@
-
 const socket = io();
 
 const createProductCard = (product) => {
@@ -22,7 +21,8 @@ socket.on("connect", () => {
 });
 
 socket.on("products-list", (data) => {
-    const productsList = data.products ?? [];
+    const productsList = data.products.docs ?? [];
+
     productContainer.innerHTML = "";
 
     // Carga de productos

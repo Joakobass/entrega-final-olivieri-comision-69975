@@ -35,6 +35,13 @@
         "enrutadores",
         "mongosh",
         "pasarle",
-        "Swal"
+        "Swal",
+        "autopopulate",
+        "enrutadores",
+        "mongosh",
+        "paginación",
+        "pasarle",
+        "Swal",
+        "virtuals"
     ]
 }

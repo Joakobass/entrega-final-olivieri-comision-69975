@@ -1,5 +1,7 @@
+
 import ProductManager from "../controllers/productManager.js";
 import { Server } from "socket.io";
+import url from "url";
 
 let serverIO = null;
 
@@ -15,15 +17,17 @@ const config = (serverHTTP) => {
 
         console.log("Se conecto el cliente " + socket.id);
 
-        const products = await productMgr.productsConsult();
+        const queryParams = url.parse(socket.handshake.headers.referer, true).query;
+        const products = await productMgr.getAllProductsWithFilters(queryParams);
 
         serverIO.emit("products-list", { products });
 
-        socket.on("product-delete", (data) => {
-            const searchedProduct = products.find((product) => Number(product.id) === Number(data.productId));
+        socket.on("product-delete", async (data) => {
 
-            if(searchedProduct){
-                productMgr.deleteProduct(searchedProduct);
+            const productFound = await productMgr.getOneProductById(data.productId);
+
+            if(productFound){
+                productMgr.deleteOneProduct(data.productId);
             }
         });
 
