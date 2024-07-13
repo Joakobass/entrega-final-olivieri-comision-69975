@@ -21,6 +21,7 @@ router.get("/:cid", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const carts = await cartsMgr.getAllCarts();
+
         res.status(200).json({ status: "success", payload: carts });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
@@ -59,6 +60,21 @@ router.delete("/:cid/product/:pid", async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 
+});
+
+router.put("/:cid", async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const { products } = req.body;
+        const updatedProducts = { products };
+
+        const updatedCart = await cartsMgr.updateCart(cid, updatedProducts);
+
+        res.status(201).json({ status: "success", payload: updatedCart });
+
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
 });
 
 export default router;

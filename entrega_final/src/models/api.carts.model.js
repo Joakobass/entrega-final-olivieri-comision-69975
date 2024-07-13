@@ -5,12 +5,12 @@ const cartsCollection = "carts";
 const cartSchema = new Schema({
     products: [{
         product: { type: Schema.Types.ObjectId, ref: "products" },
-        quantity: { type: Number } }],
+        quantity: { type: Number, require: true } }],
 }, { versionKey: false });
 
 cartSchema.pre(/^find/, function(next){
 
-    this.populate("products.productclear");
+    this.populate("products.product");
     next();
 });
 

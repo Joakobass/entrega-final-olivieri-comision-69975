@@ -118,6 +118,23 @@ class CartManager {
             throw new Error(error.message);
         }
     };
+
+    updateCart = async (idCart, updatedProducts) => {
+
+        try {
+
+            const updatedCart = await this.#cartModel.findByIdAndUpdate(idCart, updatedProducts, { new: true });
+
+            if(!updatedCart){
+                throw new Error("no existe el carrito buscado");
+            }
+
+            return updatedCart;
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
     // updateCart = async (updatedCart) => {
     //     const carts = await this.#getCarts();
     //     const index = carts.findIndex(
