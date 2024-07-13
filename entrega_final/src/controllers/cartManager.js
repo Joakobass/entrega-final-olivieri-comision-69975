@@ -46,7 +46,6 @@ class CartManager {
         try {
             const cart = new CartModel({ products: [] });
             await cart.save();
-
             return cart;
         } catch (error) {
             throw new Error(error.message);

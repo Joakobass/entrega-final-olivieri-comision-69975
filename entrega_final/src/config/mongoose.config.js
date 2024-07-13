@@ -4,9 +4,9 @@ const connectDB = () => {
     const URI = "mongodb+srv://joakobass:gxeccSxRfgbb3tpM@cluster0.zv5fky2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
     const options = {
-        useNewUrlParser: true, // Utiliza el nuevo motor de análisis de URL de MongoDB.
-        useUnifiedTopology: true, // Deshabilitar los métodos obsoletos.
-        dbName: "ecommerce", // Nombre de la base de datos.
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: "ecommerce",
     };
 
     connect(URI, options)

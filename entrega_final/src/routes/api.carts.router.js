@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
 
     try {
-        const cart = cartsMgr.createCart();
+        const cart = await cartsMgr.createCart();
         res.status(201).json({ status: "success", payload: cart });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
