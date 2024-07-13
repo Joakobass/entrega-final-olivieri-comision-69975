@@ -46,7 +46,7 @@ class CartManager {
         try {
             const cart = new CartModel({ products: [] });
             await cart.save();
-            console.log(cart);
+
             return cart;
         } catch (error) {
             throw new Error(error.message);
@@ -70,13 +70,13 @@ class CartManager {
                 throw new Error("No se encuentra el producto");
             }
 
-            const productInCart = cartFound.products.find( (product) => product._id.toString() === idProduct.toString());
+            const productInCart = cartFound.products.find( (product) => product.product.toString() === idProduct.toString());
 
             if(productInCart){
                 productInCart.quantity++;
             } else {
 
-                cartFound.products.push({ _id: idProduct, quantity: 1 });
+                cartFound.products.push({ product: idProduct, quantity: 1 });
             }
 
             cartFound.save();

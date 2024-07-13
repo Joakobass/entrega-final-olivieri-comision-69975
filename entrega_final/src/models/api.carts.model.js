@@ -2,17 +2,15 @@ import { Schema, model } from "mongoose";
 
 const cartsCollection = "carts";
 
-const productSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId, ref: "products" },
-    quantity: { type: Number },
-}, { versionKey: false });
-
 const cartSchema = new Schema({
-    products: [productSchema],
+    products: [{
+        product: { type: Schema.Types.ObjectId, ref: "products" },
+        quantity: { type: Number } }],
 }, { versionKey: false });
 
 cartSchema.pre(/^find/, function(next){
-    this.populate("products");
+
+    this.populate("products.productclear");
     next();
 });
 
