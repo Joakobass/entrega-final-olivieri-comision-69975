@@ -1,9 +1,7 @@
 import { Router } from "express";
 import CartManager from "../controllers/cartManager.js";
-//import ProductManager from "../controllers/productManager.js";
 
 const cartsMgr = new CartManager();
-//const products = new ProductManager();
 const router = Router();
 
 router.get("/:cid", async (req, res) => {
@@ -62,6 +60,19 @@ router.delete("/:cid/product/:pid", async (req, res) => {
 
 });
 
+router.delete("/:cid", async (req, res) => {
+
+    try {
+        const { cid } = req.params;
+
+        const deletedCart = await cartsMgr.emptyCart(cid);
+        res.status(201).json({ status: "success", payload: deletedCart });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+
+});
+
 router.put("/:cid", async (req, res) => {
     try {
         const { cid } = req.params;
@@ -75,6 +86,15 @@ router.put("/:cid", async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
     }
+});
+
+router.put("/:cid/product/:pid", async (req, res) => {
+
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+
+    const product = await cartsMgr.updateProductQuantity(cid, pid, quantity);
+    res.status(200).json({ status: "success", payload: product });
 });
 
 export default router;

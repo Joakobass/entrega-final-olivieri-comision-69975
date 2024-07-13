@@ -1,7 +1,7 @@
 {
-  "name": "proyecto-backend-entrega-2",
+  "name": "proyecto-backend-entrega-final",
   "version": "1.0.0",
-  "description": "Servidor de Node JS + Express + Handlebars + Socket.io",
+  "description": "Servidor de Node JS + Express + Handlebars + Socket.io + MongoDB",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

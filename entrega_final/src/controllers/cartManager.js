@@ -135,23 +135,54 @@ class CartManager {
             throw new Error(error.message);
         }
     };
-    // updateCart = async (updatedCart) => {
-    //     const carts = await this.#getCarts();
-    //     const index = carts.findIndex(
-    //         (cart) => cart.id === updatedCart.id,
-    //     );
 
-    //     carts[index] = updatedCart;
+    updateProductQuantity = async (idCart, idProduct, quantity) =>{
+        try {
+            if (!mongoDB.isValidID(idCart) || !mongoDB.isValidID(idProduct)) {
+                throw new Error("El ID no es valido");
+            }
 
-    //     this.#FileSystem.write(carts);
+            const cartFound = await this.#cartModel.findById(idCart);
+            const productFound = await productMgr.getOneProductById(idProduct);
 
-    // };
+            if(!cartFound){
+                throw new Error("No se encuentra el carrito");
+            }
+            if(!productFound){
+                throw new Error("No se encuentra el producto");
+            }
 
-    // cartsConsult = async () => {
-    //     const carts = await this.#getCarts();
+            const productInCart = cartFound.products.find( (product) => product.product._id.toString() === productFound._id.toString());
 
-    //     return carts;
-    // };
+            productInCart.quantity += Number(quantity);
+
+            cartFound.save();
+
+            return cartFound;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
+    emptyCart = async (idCart) => {
+        try {
+            if (!mongoDB.isValidID(idCart)) {
+                throw new Error("El ID no es valido");
+            }
+
+            const cartFound = await this.#cartModel.findById(idCart);
+
+            cartFound.products = [];
+
+            cartFound.save();
+
+            return cartFound;
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
 }
 
 export default CartManager;
