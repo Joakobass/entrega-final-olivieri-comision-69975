@@ -1,4 +1,6 @@
-<h1>Productos</h1>
+<header>
+    <h1>Productos</h1>
+</header>
 <div class="container" style="display: flex; align-items: center; width: 90%">
     {{#if products.hasPrevPage}}
         <a href="/products?page={{products.prevPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if limit}}&limit={{limit}}{{/if}}" class="btn-normal" style="width: 60%; text-align: center; text-decoration:none; margin: 10px" >Anterior</a>

@@ -4,8 +4,8 @@ checkoutBtn.addEventListener("click", () => {
     localStorage.clear();
 
     Swal.fire({
-        title: "Good job!",
-        text: "You clicked the button!",
+        title: "Gracias por tu compra!",
+        text: "Hace click para volver a los productos",
         icon: "success",
     })
         .then((result) => {
