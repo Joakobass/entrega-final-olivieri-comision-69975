@@ -69,7 +69,7 @@ class CartManager {
                 throw new Error("No se encuentra el producto");
             }
 
-            const productInCart = cartFound.products.find( (product) => product.product.toString() === idProduct.toString());
+            const productInCart = cartFound.products.find( (product) => product.product._id.toString() === idProduct.toString());
 
             if(productInCart){
                 productInCart.quantity++;

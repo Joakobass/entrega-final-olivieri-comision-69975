@@ -1,0 +1,33 @@
+<header>
+    <h1>Carrito de Compras</h1>
+</header>
+<main style="justify-content: center;">
+    <div class="cart">
+        <div class="cart-header">
+            <h2>Mis Productos</h2>
+        </div>
+        <div class="cart-items">
+            {{#each cart}}
+            <div class="cart-item">
+                <img src="{{getProp this 'product.thumbnail'}}" alt="Producto">
+                <div class="cart-item-info">
+                    <h3>Marca: {{getProp this 'product.title'}}</h3>
+                    <p>Modelo: {{getProp this 'product.description'}}</p>
+                    <p>Precio: {{getProp this 'product.price'}}</p>
+                    
+                    <p>Cantidad: {{getProp this "quantity"}}</p>
+                    
+                    
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <div class="cart-footer">
+            <h3>Total: {{getTotal cart}}</h3>
+            <button class="checkout-btn" style="width: 25%;">Proceder al Pago</button>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/cart.js"></script>

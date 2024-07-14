@@ -3,7 +3,8 @@ import handlebars from "./config/handlebars.config.js";
 import productsRouter from "./routes/api.products.router.js";
 import cartsRouter from "./routes/api.carts.router.js";
 import paths from "./utils/paths.js";
-import viewsRouter from "./routes/app.products.router.js";
+import productsViewRouter from "./routes/app.products.router.js";
+import cartViewRouter from "./routes/app.cart.router.js";
 import serverSocket from "./config/socket.config.js";
 import mongoDB from "./config/mongoose.config.js";
 
@@ -16,7 +17,8 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
 // Enrutadores
-server.use("/", viewsRouter);
+server.use("/", productsViewRouter);
+server.use("/", cartViewRouter);
 server.use("/api/products", productsRouter);
 server.use("/api/carts", cartsRouter);
 
