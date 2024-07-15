@@ -102,13 +102,15 @@ class CartManager {
                 throw new Error("No se encuentra el producto");
             }
 
-            const index = cartFound.products.findIndex( (product) => product._id.toString() === idProduct.toString());
-            const productInCart = cartFound.products.find( (product) => product._id.toString() === idProduct.toString());
+            const index = cartFound.products.findIndex( (product) => product.product._id.toString() === idProduct.toString());
 
-            if(productInCart.quantity > 1){
-                productInCart.quantity--;
-            } else {
-                cartFound.products.splice(index, 1);
+            if(index !== -1){
+
+                if(cartFound.products[index].quantity > 1){
+                    cartFound.products[index].quantity--;
+                } else {
+                    cartFound.products.splice(index, 1);
+                }
             }
 
             cartFound.save();
@@ -121,14 +123,16 @@ class CartManager {
     updateCart = async (idCart, updatedProducts) => {
 
         try {
+            const cartToUpdate = await this.#cartModel.findById(idCart);
 
-            const updatedCart = await this.#cartModel.findByIdAndUpdate(idCart, updatedProducts, { new: true });
-
-            if(!updatedCart){
+            if(!cartToUpdate){
                 throw new Error("no existe el carrito buscado");
             }
 
-            return updatedCart;
+            cartToUpdate.products = updatedProducts.products;
+
+            cartToUpdate.save();
+            return cartToUpdate;
 
         } catch (error) {
             throw new Error(error.message);

@@ -76,8 +76,8 @@ router.delete("/:cid", async (req, res) => {
 router.put("/:cid", async (req, res) => {
     try {
         const { cid } = req.params;
-        const { products } = req.body;
-        const updatedProducts = { products };
+        const { products, quantity } = req.body;
+        const updatedProducts = { products, quantity };
 
         const updatedCart = await cartsMgr.updateCart(cid, updatedProducts);
 

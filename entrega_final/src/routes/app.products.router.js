@@ -11,7 +11,7 @@ router.get("/products", async (req, res)=>{
     const sort = req.query.sort;
     const limit = req.query.limit;
 
-    res.render("home", { title: "Productos", products, sort, limit });
+    res.render("products", { title: "Productos", products, sort, limit });
 });
 
 router.get("/realtimeproducts", async (req, res)=>{
